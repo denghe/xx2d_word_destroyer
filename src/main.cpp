@@ -10,7 +10,7 @@ int main() {
 
 
 void GameLooper::Init() {
-	fnt = xx::engine.LoadBMFont("res/coderscrux.fnt"sv);
+	fnt = xx::engine.LoadBMFont("res/3500+.fnt"sv);
 	fpsViewer.Init(fnt);
 
 	scene = xx::Make<Scene_Menu>();

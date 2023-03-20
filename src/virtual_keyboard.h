@@ -20,12 +20,12 @@ struct VirtualKeyboardItem {
 
 struct VirtualKeyboard {
 	std::vector<VirtualKeyboardItem> items;
-	float margin{ 16 }, width{ 80 }, height{ 80 };	// every key display config. total width = 1468
-	float width_backspace{ 220 };
-	float width_tab{ 180 }, width_backslash{ 120 };
-	float width_capslock{ 200 }, width_enter{ 196 };
-	float width_left_shift{ 246 }, width_right_shift{ 246 };
-	float width_space{ 480 };
+	float margin{ 16 }, width{ 80 }, height{ 80 };	// every key display config
+	float width_backspace{ 160 };
+	float width_tab{ 130 }, width_backslash{ 110 };
+	float width_capslock{ 150 }, width_enter{ 186 };
+	float width_left_shift{ 200 }, width_right_shift{ 232 };
+	float width_space{ (width + margin) * 6 };
 	xx::XY pos{};	// current root pos
 	// todo: shift, capslock check
 	void Init();

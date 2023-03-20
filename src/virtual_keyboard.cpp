@@ -23,9 +23,12 @@ void VirtualKeyboardItem::Init(VirtualKeyboard* const& owner_, xx::KbdKeys const
 }
 
 void VirtualKeyboardItem::DrawTxt() {
-	// todo: switch txt1, 2 draw
-	lb1.SetPosition(owner->pos + pos).Draw();
-	// todo: set pos by owner->pos
+	if (t2.size()) {
+		lb1.SetPosition(owner->pos + pos.MakeAdd(0, 17)).Draw();
+		lb2.SetPosition(owner->pos + pos.MakeAdd(0, -18)).Draw();
+	} else {
+		lb1.SetPosition(owner->pos + pos).Draw();
+	}
 }
 
 void VirtualKeyboardItem::DrawBorder() {
@@ -60,18 +63,18 @@ void VirtualKeyboard::Init() {
 		KbdKeys::Space
 	};
 	txts1 = {
-		"`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Backspace",
-		"Tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\",
-		"CapsLock", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "Enter",
-		"Shift", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "Shift",
-		"Space"
-	};
-	txts2 = {
 		"~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "Backspace",
 		"Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "{", "}", "|",
 		"CapsLock", "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "Enter",
 		"Shift", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?", "Shift",
 		"Space"
+	};
+	txts2 = {
+		"`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "",
+		"", "", "", "", "", "", "", "", "", "", "", "[", "]", "\\",
+		"", "", "", "", "", "", "", "", "", "", ";", "'", "",
+		"", "", "", "", "", "", "", "", ",", ".", "/", "",
+		""
 	};
 
 	items.reserve(keys.size());
@@ -80,22 +83,23 @@ void VirtualKeyboard::Init() {
 	auto totalWidth2 = width_tab + margin + (width + margin) * 12 + width_backslash;
 	auto totalWidth3 = width_capslock + margin + (width + margin) * 11 + width_enter;
 	auto totalWidth4 = width_left_shift + margin + (width + margin) * 10 + width_right_shift;
-	assert(totalWidth1 = totalWidth2);
-	assert(totalWidth1 = totalWidth3);
-	assert(totalWidth1 = totalWidth4);
-	auto totalHeight = height * 5 + margin * 4;
+	assert(totalWidth1 == totalWidth2);
+	assert(totalWidth1 == totalWidth3);
+	assert(totalWidth1 == totalWidth4);
+	auto totalHeight = (height + margin) * 5;
 
-	xx::XY original = { -totalWidth1 / 2, totalHeight };
+	xx::XY original{ -totalWidth1 / 2, totalHeight };
 
-	size_t i = 0;
+	size_t i{};
 	auto xy = original;
 
 	// ` 1 2 3 4 5 6 7 8 9 0 - = ........
 	xy.y -= height / 2;
-	for (; i < 13; i++) {
+	for (int j = 0; j < 13; j++) {
 		xy.x += width / 2;
 		items.emplace_back().Init(this, keys[i], txts1[i], txts2[i], xy, { width, height });
 		xy.x += width / 2 + margin;
+		++i;
 	}
 	// ......................... Backspace
 	{
@@ -104,9 +108,9 @@ void VirtualKeyboard::Init() {
 		++i;
 	}
 
-	// Tab ...............................
 	xy.x = original.x;
 	xy.y -= height / 2 + margin + height / 2;
+	// Tab ...............................
 	{
 		xy.x += width_tab / 2;
 		items.emplace_back().Init(this, keys[i], txts1[i], txts2[i], xy, { width_tab, height });
@@ -114,14 +118,71 @@ void VirtualKeyboard::Init() {
 		++i;
 	}
 	// .... q w e r t y u i o p [ ]
-	for (; i < 15+12; i++) {
+	for (int j = 0; j < 12; j++) {
 		xy.x += width / 2;
 		items.emplace_back().Init(this, keys[i], txts1[i], txts2[i], xy, { width, height });
 		xy.x += width / 2 + margin;
+		++i;
+	}
+	// .............................. |
+	{
+		xy.x += width_backslash / 2;
+		items.emplace_back().Init(this, keys[i], txts1[i], txts2[i], xy, { width_backslash, height });
+		++i;
 	}
 
-	//xy = { original.x, xy.y - siz.y - margin };
+	xy.x = original.x;
+	xy.y -= height / 2 + margin + height / 2;
+	// CapsLock ..........................
+	{
+		xy.x += width_capslock / 2;
+		items.emplace_back().Init(this, keys[i], txts1[i], txts2[i], xy, { width_capslock, height });
+		xy.x += width_capslock / 2 + margin;
+		++i;
+	}
+	// .... a s d f g h j k l ; ' ....
+	for (int j = 0; j < 11; j++) {
+		xy.x += width / 2;
+		items.emplace_back().Init(this, keys[i], txts1[i], txts2[i], xy, { width, height });
+		xy.x += width / 2 + margin;
+		++i;
+	}
+	// .............................. Enter
+	{
+		xy.x += width_enter / 2;
+		items.emplace_back().Init(this, keys[i], txts1[i], txts2[i], xy, { width_enter, height });
+		++i;
+	}
 
+	xy.x = original.x;
+	xy.y -= height / 2 + margin + height / 2;
+	// LeftShift ..........................
+	{
+		xy.x += width_left_shift / 2;
+		items.emplace_back().Init(this, keys[i], txts1[i], txts2[i], xy, { width_left_shift, height });
+		xy.x += width_left_shift / 2 + margin;
+		++i;
+	}
+	// .... z x c v b n m , . / ....
+	for (int j = 0; j < 10; j++) {
+		xy.x += width / 2;
+		items.emplace_back().Init(this, keys[i], txts1[i], txts2[i], xy, { width, height });
+		xy.x += width / 2 + margin;
+		++i;
+	}
+	// .............................. RightShift
+	{
+		xy.x += width_right_shift / 2;
+		items.emplace_back().Init(this, keys[i], txts1[i], txts2[i], xy, { width_right_shift, height });
+		++i;
+	}
+
+	xy.x = 0;
+	xy.y -= height / 2 + margin + height / 2;
+	// Space
+	{
+		items.emplace_back().Init(this, keys[i], txts1[i], txts2[i], xy, { width_space, height });
+	}
 }
 
 void VirtualKeyboard::Update() {
