@@ -21,7 +21,7 @@ void MenuItem::Init(SceneBase* const& scene_, xx::XY const& pos, std::string_vie
 	txt = txt_;
 	handler = std::move(handler_);
 
-	content.SetText(scene->looper->fnt, txt, fontSize)
+	content.SetText(looper->fnt, txt, fontSize)
 		.SetPosition(pos).Commit();
 
 	auto siz = content.size + xx::XY{ 20, 4 };

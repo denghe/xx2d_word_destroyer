@@ -2,11 +2,14 @@
 #include "scene_game.h"
 // ...
 
-void Scene_Game::Init(GameLooper* looper) {
-	this->looper = looper;
+void Scene_Game::Init() {
+	vk.Init();
 }
 
 int Scene_Game::Update() {
-
+	vk.Update();
+	//...
+	vk.Draw();
+	//...
 	return 0;
 }

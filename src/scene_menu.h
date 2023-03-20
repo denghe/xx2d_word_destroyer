@@ -3,6 +3,6 @@
 
 struct Scene_Menu : SceneBase {
 	Menu menu;
-	void Init(GameLooper* looper) override;
+	void Init() override;
 	int Update() override;
 };

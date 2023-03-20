@@ -4,9 +4,10 @@
 #include "menu_item.h"
 
 struct GameLooper;
+extern GameLooper* looper;
+
 struct SceneBase {
-	GameLooper* looper{};
-	virtual void Init(GameLooper*) = 0;
+	virtual void Init() = 0;
 	virtual int Update() = 0;
 	virtual ~SceneBase() {};
 };
@@ -20,7 +21,7 @@ struct GameLooper : xx::GameLooperBase {
 	void DelaySwitchTo() {
 		xx::engine.DelayExecute([this] {
 			scene = xx::Make<LT>();
-			scene->Init(this);
+			scene->Init();
 		});
 	}
 

@@ -1,16 +1,20 @@
 ﻿#include "main.h"
 #include "scene_menu.h"
 
+GameLooper* looper{};
 int main() {
-	return GameLooper{}.Run("xx2d's game: space shooter");
+	GameLooper g;
+	::looper = &g;
+	return g.Run("xx2d's game: word destroyer");
 }
+
 
 void GameLooper::Init() {
 	fnt = xx::engine.LoadBMFont("res/coderscrux.fnt"sv);
 	fpsViewer.Init(fnt);
 
 	scene = xx::Make<Scene_Menu>();
-	scene->Init(this);
+	scene->Init();
 }
 
 int GameLooper::Update() {
