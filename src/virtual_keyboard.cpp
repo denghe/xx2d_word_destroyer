@@ -2,6 +2,7 @@
 #include "virtual_keyboard.h"
 
 bool VirtualKeyboardItem::Inside(xx::XY const& p) {
+	// todo: calc owner's pos
 	return p.x >= leftBottom.x && p.x <= rightTop.x
 		&& p.y >= leftBottom.y && p.y <= rightTop.y;
 }
@@ -32,11 +33,37 @@ void VirtualKeyboardItem::DrawTxt() {
 }
 
 void VirtualKeyboardItem::DrawBorder() {
-	// todo: set pos by owner->pos
+	border.SetColor(owner->Pressed(key) ? xx::RGBA8{255,0,0,255} : xx::RGBA8{255,255,255,255});
 	border.SetPosition(owner->pos + pos).Draw();
 }
 
+bool VirtualKeyboardItem::HandleMouseDown(VirtualKeyboardItemMouseEventListener& L) {
+	assert(owner->mouseClickedKey == xx::KbdKeys::Null);
+	if (Inside(L.downPos - owner->pos)) {
+		owner->mouseClickedKey = key;
+		return true;
+	}
+	return false;
+}
+
+int VirtualKeyboardItem::HandleMouseMove(VirtualKeyboardItemMouseEventListener& L) {
+	if (!Inside(xx::engine.mousePosition - owner->pos)) {
+		owner->mouseClickedKey = {};
+		return 4;
+	}
+	return 0;
+}
+
+void VirtualKeyboardItem::HandleMouseUp(VirtualKeyboardItemMouseEventListener& L) {
+	owner->mouseClickedKey = {};
+}
+
+
+/***********************************************************************************************/
+
 void VirtualKeyboard::Init() {
+
+	meListener.Init(xx::Mbtns::Left);
 
 	using namespace xx;
 	std::array<KbdKeys, 54> keys;
@@ -187,6 +214,13 @@ void VirtualKeyboard::Init() {
 
 void VirtualKeyboard::Update() {
 	pos = xx::engine.ninePoints[2];
+	
+	meListener.Update();
+	auto&& iter = items.begin();
+	while (meListener.eventId && iter != items.end()) {
+		meListener.Dispatch(&*iter++);
+	}
+
 	// todo
 }
 
@@ -198,3 +232,9 @@ void VirtualKeyboard::Draw() {
 		o.DrawBorder();
 	}
 }
+
+bool VirtualKeyboard::Pressed(xx::KbdKeys const& key) {
+	return xx::engine.Pressed(key) || key == mouseClickedKey;
+}
+
+// todo

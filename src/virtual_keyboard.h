@@ -1,6 +1,9 @@
 ﻿#pragma once
 #include "xx2d.h"
 
+struct VirtualKeyboardItem;
+using VirtualKeyboardItemMouseEventListener = xx::MouseEventListener<VirtualKeyboardItem*>;
+
 struct VirtualKeyboard;
 struct VirtualKeyboardItem {
 	VirtualKeyboard* owner{};
@@ -16,6 +19,10 @@ struct VirtualKeyboardItem {
 	bool Inside(xx::XY const& p);
 	void DrawTxt();
 	void DrawBorder();
+
+	bool HandleMouseDown(VirtualKeyboardItemMouseEventListener& L);
+	int HandleMouseMove(VirtualKeyboardItemMouseEventListener& L);
+	void HandleMouseUp(VirtualKeyboardItemMouseEventListener& L);
 };
 
 struct VirtualKeyboard {
@@ -28,9 +35,13 @@ struct VirtualKeyboard {
 	float width_space{ (width + margin) * 6 };
 	xx::XY pos{};	// current root pos
 	// todo: shift, capslock check
+	VirtualKeyboardItemMouseEventListener meListener;
+	xx::KbdKeys mouseClickedKey{};
+
 	void Init();
 	void Update();
 	void Draw();
 
+	bool Pressed(xx::KbdKeys const& key);
 	// show? hide? key press callback? blink effect tips?
 };
