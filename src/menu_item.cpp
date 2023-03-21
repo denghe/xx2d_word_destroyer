@@ -22,7 +22,7 @@ void MenuItem::Init(SceneBase* const& scene_, xx::XY const& pos, std::string_vie
 	handler = std::move(handler_);
 
 	content.SetText(looper->fnt, txt, fontSize)
-		.SetPosition(pos).Commit();
+		.SetPosition(pos);
 
 	auto siz = content.size + xx::XY{ 20, 4 };
 	border.FillBoxPoints({}, siz)

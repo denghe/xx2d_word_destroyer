@@ -18,8 +18,6 @@ void GameLooper::Init() {
 }
 
 int GameLooper::Update() {
-	if (xx::engine.Pressed(xx::KbdKeys::Escape)) return 1;
-
 	if (!scene) return 1;
 	if (int r = scene->Update()) return r;
 

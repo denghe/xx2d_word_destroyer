@@ -11,7 +11,7 @@ struct VirtualKeyboardItem {
 	std::string t1, t2;
 	xx::XY pos{}, wh{}, leftBottom{}, rightTop{};	// bounding box
 
-	xx::Label lb1, lb2;
+	xx::SimpleLabel lb1, lb2;
 	xx::LineStrip border;
 
 	void Init(VirtualKeyboard* const& owner_, xx::KbdKeys const& k, std::string_view const& t1

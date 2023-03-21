@@ -21,7 +21,7 @@ struct MenuItem {
 	bool Inside(xx::XY const& point);	// bounding box contains point?
 
 	xx::LineStrip border;
-	xx::Label content;
+	xx::SimpleLabel content;
 };
 
 /************************************************************************/
