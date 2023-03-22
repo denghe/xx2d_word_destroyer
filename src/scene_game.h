@@ -12,7 +12,7 @@ struct Scene_Game : SceneBase {
 	void Hit(char32_t const& c);
 	xx::Coro Logic();
 
-	std::vector<xx::Shared<Sobj_Word>> words;
+	xx::List<xx::Shared<Sobj_Word>, int> words;
 
 	xx::Weak<Sobj_Word> target;
 

@@ -2,7 +2,7 @@
 #include "scene_game.h"
 #include "sobj_word.h"
 
-void Sobj_Word::Init(Scene_Game* const& scene_, size_t const& idx, xx::XY const& pos_, float const& speed_, std::u32string_view const& txt_) {
+void Sobj_Word::Init(Scene_Game* const& scene_, int const& idx, xx::XY const& pos_, float const& speed_, std::u32string_view const& txt_) {
 	scene = scene_;
 	indexAtContainer = idx;
 	pos = pos_;

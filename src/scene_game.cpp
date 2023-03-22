@@ -18,6 +18,7 @@ void Scene_Game::Init() {
 
 	// init logic
 	coros.Add(Logic());
+	words.Reserve(1024);
 
 	// cleanup keyboard queue
 	xx::engine.kbdInputs.clear();
@@ -52,11 +53,9 @@ int Scene_Game::Update() {
 		vk.Update();
 
 		// move words
-		for (ptrdiff_t i = words.size() - 1; i >= 0; --i) {
+		for (auto i = words.len - 1; i >= 0; --i) {
 			if (words[i]->Update()) {
-				words[i] = words.back();
-				words[i]->indexAtContainer = i;
-				words.pop_back();
+				words.RemoveAt(i);
 			}
 		}
 	}
@@ -76,32 +75,27 @@ void Scene_Game::Hit(char32_t const& c) {
 	if (auto word = target.Lock()) {
 		if (word->Hit(c) == 0) {
 			auto i = word->indexAtContainer;
-			words[i] = words.back();
-			words[i]->indexAtContainer = i;
-			words.pop_back();
+			words.RemoveAt(i);
 			target.Reset();
 		}
 		return;
 	}
 
-	// todo: word search sort
-	for (ptrdiff_t i = 0, e = (ptrdiff_t)words.size(); i < e; ++i) {
+	for (auto e = words.len, i = 0; i < e; ++i) {
 		auto r = words[i]->Hit(c);
 		switch (r) {
 		case -1:
 			continue;
 		case 0:
-			words[i] = words.back();
-			words[i]->indexAtContainer = i;
-			words.pop_back();
+			words.RemoveAt(i);
 			return;
 		case 1:
 			target = words[i];
+			target->indexAtContainer = i;
 			return;
 		}
 	}
 }
-
 
 xx::Coro Scene_Game::Logic() {
 	while (true) {
@@ -111,8 +105,8 @@ xx::Coro Scene_Game::Logic() {
 		auto idx = rnd.Next<int>(0, (int)dict.size() - 1);
 		auto w = xx::engine.hw - 100;
 		auto x = rnd.Next<int>(-w, w);
-		auto siz = words.size();
-		words.emplace_back().Emplace()->Init(this, siz, xx::engine.ninePoints[8].MakeAdd(x, 32), 0.5f, dict[idx]);
+		auto siz = words.len;
+		words.Emplace().Emplace()->Init(this, siz, xx::engine.ninePoints[8].MakeAdd(x, 32), 0.5f, dict[idx]);
 
 		CoSleep(1s);
 	}
