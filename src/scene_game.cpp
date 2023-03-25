@@ -106,8 +106,9 @@ xx::Coro Scene_Game::Logic() {
 		auto w = xx::engine.hw - 100;
 		auto x = rnd.Next<int>(-w, w);
 		auto siz = words.len;
-		words.Emplace().Emplace()->Init(this, siz, xx::engine.ninePoints[8].MakeAdd(x, 32), 0.5f, dict[idx]);
-
-		CoSleep(1s);
+		words.Emplace().Emplace()->Init(this, siz, xx::engine.ninePoints[8].MakeAdd(x, 32), 0.1f, dict[idx]);
+		for (int i = 0, e = words.len; i < e; i++) {
+			CoSleep(2s);
+		}
 	}
 }
