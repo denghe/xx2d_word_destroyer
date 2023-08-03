@@ -17,7 +17,7 @@ void Scene_Game::Init() {
 	}
 
 	// init logic
-	coros.Add(Logic());
+	tasks.AddTask(Logic());
 	words.Reserve(1024);
 
 	// cleanup keyboard queue
@@ -38,7 +38,7 @@ int Scene_Game::Update() {
 		timePool -= 1.f / 120;
 
 		// logic update
-		coros();
+		tasks();
 
 		// keyboard handle
 		auto& ks = xx::engine.kbdInputs;
@@ -97,7 +97,7 @@ void Scene_Game::Hit(char32_t const& c) {
 	}
 }
 
-xx::Coro Scene_Game::Logic() {
+xx::Task<> Scene_Game::Logic() {
 	while (true) {
 
 		// todo: more random check  avoid first litter same ?
@@ -108,7 +108,7 @@ xx::Coro Scene_Game::Logic() {
 		auto siz = words.len;
 		words.Emplace().Emplace()->Init(this, siz, xx::engine.ninePoints[8].MakeAdd(x, 32), 0.1f, dict[idx]);
 		for (int i = 0, e = words.len; i < e; i++) {
-			CoSleep(2s);
+			co_await xx::engine.TaskSleep(2);
 		}
 	}
 }

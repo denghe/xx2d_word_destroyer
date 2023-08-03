@@ -10,7 +10,7 @@ struct Scene_Game : SceneBase {
 	int Update() override;
 
 	void Hit(char32_t const& c);
-	xx::Coro Logic();
+	xx::Task<> Logic();
 
 	xx::List<xx::Shared<Sobj_Word>, int> words;
 
@@ -20,7 +20,7 @@ struct Scene_Game : SceneBase {
 
 	xx::Audio audio;
 
-	xx::Coros coros;
+	xx::Tasks tasks;
 
 	xx::Rnd rnd;
 
